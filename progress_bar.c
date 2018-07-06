@@ -10,7 +10,7 @@ int main(){
     while(i<=100){
         printf("[%-100s]",bar);
         printf("[%d%%]",i);
-        //printf("%s",lable[i%4]);
+        printf("%c",lable[i%4]);
         fflush(stdout);
         printf("\r");
         bar[i++] = '#';
