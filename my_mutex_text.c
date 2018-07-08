@@ -4,14 +4,20 @@
 
 int ticket = 100;
 
+//定义互斥锁
+pthread_mutex_t mutex;
+
 void *hanlder(void *arg){
     char *id= (char*)arg;
     while(1){
+        pthread_mutex_lock(&mutex);
         if(ticket > 0){
             usleep(1000);
             printf("%s sells ticket:%d\n",id,ticket);
             ticket--;
+            pthread_mutex_unlock(&mutex);
         }else{
+            pthread_mutex_unlock(&mutex);
             break;
         }
     }
@@ -22,6 +28,7 @@ void *hanlder(void *arg){
 
 //主函数
 int main(){
+    pthread_mutex_init(&mutex,NULL);
     pthread_t t1,t2,t3,t4;
     pthread_create(&t1,NULL,hanlder,"thread 1");
     pthread_create(&t2,NULL,hanlder,"thread 2");
@@ -31,4 +38,5 @@ int main(){
     pthread_join(t2,NULL);
     pthread_join(t3,NULL);
     pthread_join(t4,NULL);
+    pthread_mutex_destroy(&mutex);
 }
