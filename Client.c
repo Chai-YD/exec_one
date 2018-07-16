@@ -27,6 +27,7 @@ int main(){
         perror("connect");
         exit(1);
     }
+    printf("connect success\n");
     int kfd = fileno(stdin);
     int maxfd = kfd>cfd?kfd:cfd;
     fd_set set;
