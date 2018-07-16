@@ -57,15 +57,11 @@ void erase(int cfd){
 }
 
 void travel(const char* msg){
-    if(head == NULL){
-        return ;
-    }
     node_t *p = head;
-    do{
+    while(p != head){
         write(p->c.cfd,"msg",strlen(msg));
-        printf("name = %s\n",p->c.nickname);
         p = p->next;
-    }while(p!=head);
+    }
 }
 void *process(void *arg){
     int cfd = *(int *)arg;
@@ -73,13 +69,18 @@ void *process(void *arg){
     char buf[1024];
     sprintf(buf,"%s","欢迎");
     write(cfd,buf,strlen(buf));
+    memset(buf,0x00,sizeof(buf));
     sprintf(buf,"%s","输入昵称");
     write(cfd,buf,strlen(buf));
     memset(buf,0x00,sizeof(buf));
-    read(cfd,buf,1024);
+    if(read(cfd,buf,1024)<=0)
+        perror("read"),exit(3);
     char msg[1024];
     sprintf(msg,"欢迎%s来到聊天室",buf);
+    printf("&s",msg);
     travel(msg);
+    printf("after travel %s\n",msg);
+
     client_t client;
     client.cfd = cfd;
     strcpy(client.nickname,buf);
@@ -88,6 +89,7 @@ void *process(void *arg){
         memset(buf,0x00,sizeof(buf));
         int r = read(cfd,buf,1024);
         if(r <= 0)break;
+        printf("buf = [%s]\n",buf);
         travel(buf);
     }
     erase(cfd);
@@ -119,17 +121,16 @@ int main(){
     }
     //建立连接
     for(;;){
-        struct sockaddr_in client;
-        int  len = sizeof(client);
-        int clientfd = accept(lfd,(struct sockaddr*)&client,&len);
-        if(clientfd == -1){
-            printf("accept error");
+        int cfd = accept(lfd,NULL,0);
+        if(cfd == -1){
             continue;
         }
+        printf("连接 成功\n");
         pthread_t tid;
+        int *p = malloc(sizeof(cfd));
+        *p = cfd;
         //线程的创建
-        pthread_create(&tid,NULL,process,NULL);
+        pthread_create(&tid,NULL,process,p);
         pthread_detach(tid);
     }
-    return 0;
 }
