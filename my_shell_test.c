@@ -1,6 +1,17 @@
+/*****************************
+ * 思路
+ * **************************/
+//1.获取命令行
+//2.解析命令行
+//3.建立一个子进程（fork）
+//4.替换子进程（execvp）
+//5.父进程等待子进程的退出
+
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/types.h>
+#include<sys/wait.h>
 #include<sys/stat.h>
 #include<ctype.h>
 #include<unistd.h>
