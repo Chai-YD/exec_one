@@ -7,10 +7,16 @@
 #include<pthread.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<sys/syscall.h>
 
+//同一个线程组的线程，没有层次关系
 void *handler(void* mag){
     int i;
     printf("I am thread\n");
+    //获取线程id
+    pid_t tid;
+    tid  = syscall(SYS_gettid);
+    printf("%d\n",tid);
     sleep(1);
 }
 
