@@ -7,7 +7,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<error.h>
-//1.调用umask将文件模式创建 屏蔽字设置为0
+//1.调用umask将文件模式创建 屏蔽字设置为0,防止某些权限的限制
 //2.调用fork，父进程 退出（exit）
 //如果该守护进程是作为一条简单的shell命令启动的，呢么父
 //进程终止使得shell认为该命令己经执行完毕
